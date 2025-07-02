@@ -28,7 +28,7 @@ jobs:
       - name: Upload Artifact
         uses: ncipollo/release-action@v1.10.0
         with:
-          artifacts: ${{ github.workspace }}/nukkit/target/RedisBridge-Nukkit-${{ env.VERSION }}-SNAPSHOT.jar, ${{ github.workspace }}/waterdogpe/target/RedisBridge-WDPE-${{ env.VERSION }}-SNAPSHOT.jar
+          artifacts: ${{ github.workspace }}/nukkit/target/RedisBridge-Nukkit-${{ env.VERSION }}.jar, ${{ github.workspace }}/waterdogpe/target/RedisBridge-WDPE-${{ env.VERSION }}.jar
           draft: false
           name: Release v${{ env.VERSION }}
           tag: ${{ env.VERSION }}
