@@ -3,6 +3,10 @@ package net.josscoder.redisbridge.nukkit;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
 import lombok.Getter;
+import net.josscoder.redisbridge.nukkit.command.LobbyCommand;
+import net.josscoder.redisbridge.nukkit.command.TransferCommand;
+
+import java.util.Arrays;
 
 public class RedisBridgePlugin extends PluginBase {
 
@@ -16,6 +20,8 @@ public class RedisBridgePlugin extends PluginBase {
 
     @Override
     public void onEnable() {
+        getServer().getCommandMap().registerAll("redisbridge", Arrays.asList(new LobbyCommand(), new TransferCommand()));
+
         getLogger().info(TextFormat.GREEN + "RedisBridge Plugin Enabled");
     }
 

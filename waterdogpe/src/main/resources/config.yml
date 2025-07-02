@@ -1,0 +1,6 @@
+id: "Proxy-NA-1"
+
+redis:
+  hostname: "localhost"
+  port: 6379
+  password: "yourpasswordhere"
