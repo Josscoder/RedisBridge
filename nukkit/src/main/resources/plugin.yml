@@ -1,0 +1,5 @@
+name: RedisBridge
+main: net.josscoder.redisbridge.nukkit.RedisBridgePlugin
+api: 1.0.0
+version: ${project.version}
+author: Josscoder

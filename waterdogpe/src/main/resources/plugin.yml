@@ -1,0 +1,4 @@
+name: RedisBridge
+main: net.josscoder.redisbridge.waterdogpe.RedisBridgePlugin
+version: ${project.version}
+author: Josscoder
