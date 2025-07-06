@@ -1,8 +1,9 @@
 redis:
-  hostname: "localhost"
+  host: "localhost"
   port: 6379
   password: "yourpasswordhere"
 
 instance:
   id: "Lobby-1"
-  group: "lobby"
+  group: "Lobby"
+  host: "127.0.0.1" #change this for production
