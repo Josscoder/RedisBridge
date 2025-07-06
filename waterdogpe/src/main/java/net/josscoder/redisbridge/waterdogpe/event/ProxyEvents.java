@@ -20,9 +20,10 @@ public class ProxyEvents {
 
     public static void onTransferRequest(ServerTransferRequestEvent event) {
         ProxiedPlayer player = event.getPlayer();
+        ServerInfo currentServer = player.getServerInfo();
         ServerInfo targetServer = event.getTargetServer();
 
-        if (player.getServerInfo() == null || targetServer == null || player.getServerInfo().getServerName().equalsIgnoreCase(targetServer.getServerName())) {
+        if (currentServer == null || targetServer == null || currentServer.getServerName().equalsIgnoreCase(targetServer.getServerName())) {
             return;
         }
 

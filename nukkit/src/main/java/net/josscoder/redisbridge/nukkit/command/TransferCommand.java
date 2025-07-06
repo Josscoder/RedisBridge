@@ -6,12 +6,13 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 import net.josscoder.redisbridge.core.data.InstanceInfo;
 import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.nukkit.RedisBridgePlugin;
 
 public class TransferCommand extends Command {
 
     public TransferCommand() {
         super("transfer", "Transfer to a server", "/transfer <serverID>");
-        setPermission("redisbridge.transfer");
+        setPermission("redisbridge.transfer.command.permission");
     }
 
     @Override
@@ -34,7 +35,13 @@ public class TransferCommand extends Command {
 
         InstanceInfo instance = InstanceManager.getInstance().getInstanceById(serverID);
         if (instance == null) {
-            player.sendMessage(TextFormat.RED + "That server does not exist!");
+            player.sendMessage(TextFormat.RED + "Server does not exist!");
+
+            return false;
+        }
+
+        if (instance.getId().equalsIgnoreCase(RedisBridgePlugin.getInstance().getCurrentInstanceInfo().getId())) {
+            player.sendMessage(TextFormat.RED + "You are already on this server!");
 
             return false;
         }

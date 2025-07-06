@@ -69,7 +69,6 @@ public class RedisBridgePlugin extends Plugin {
         CommandMap map = getProxy().getCommandMap();
         map.unregisterCommand("wdlist");
         map.registerCommand(new WhereAmICommand());
-        //map.registerCommand(new ListCommand());
     }
 
     private void setupEvents() {
