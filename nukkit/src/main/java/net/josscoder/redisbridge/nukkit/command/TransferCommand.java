@@ -11,7 +11,7 @@ public class TransferCommand extends Command {
 
     public TransferCommand() {
         super("transfer", "Transfer to a server", "/transfer <serverID>");
-        setPermission("redisbridge.transfer");
+        setPermission("redisbridge.transfer.command.permission");
     }
 
     @Override
