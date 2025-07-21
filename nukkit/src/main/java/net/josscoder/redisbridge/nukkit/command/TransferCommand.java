@@ -4,8 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
 import net.josscoder.redisbridge.nukkit.RedisBridgePlugin;
 
 public class TransferCommand extends Command {
@@ -40,7 +40,7 @@ public class TransferCommand extends Command {
             return false;
         }
 
-        if (instance.getId().equalsIgnoreCase(RedisBridgePlugin.getInstance().getCurrentInstanceInfo().getId())) {
+        if (instance.getId().equalsIgnoreCase(RedisBridgePlugin.getInstance().getInstanceInfo().getId())) {
             player.sendMessage(TextFormat.RED + "You are already on this server!");
 
             return false;

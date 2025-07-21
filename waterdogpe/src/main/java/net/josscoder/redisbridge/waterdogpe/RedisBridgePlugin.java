@@ -58,6 +58,7 @@ public class RedisBridgePlugin extends Plugin {
                 config.getString("redis.password"),
                 new Logger()
         );
+        core.registerDefaultMessages();
     }
 
     private void setupHandlers() {

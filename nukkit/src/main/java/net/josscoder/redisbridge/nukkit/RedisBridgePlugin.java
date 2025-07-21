@@ -6,7 +6,9 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import lombok.Getter;
 import net.josscoder.redisbridge.core.RedisBridgeCore;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.message.defaults.InstanceHeartbeatMessage;
+import net.josscoder.redisbridge.core.message.defaults.InstanceShutdownMessage;
 import net.josscoder.redisbridge.nukkit.command.LobbyCommand;
 import net.josscoder.redisbridge.nukkit.command.TransferCommand;
 import net.josscoder.redisbridge.nukkit.logger.Logger;
@@ -22,7 +24,7 @@ public class RedisBridgePlugin extends PluginBase {
     private RedisBridgeCore core;
 
     @Getter
-    private InstanceInfo currentInstanceInfo;
+    private InstanceInfo instanceInfo;
 
     private TaskHandler heartbeatTask;
 
@@ -55,24 +57,28 @@ public class RedisBridgePlugin extends PluginBase {
                 config.getString("redis.password"),
                 new Logger()
         );
+        core.registerDefaultMessages();
     }
 
     private void setupInstance() {
         Config config = getConfig();
 
-        currentInstanceInfo = new InstanceInfo(
-                config.getString("instance.id"),
-                config.getString("instance.host"),
-                getServer().getPort(),
-                config.getString("instance.group"),
-                getServer().getMaxPlayers()
-        );
+        instanceInfo = new InstanceInfo();
+        instanceInfo.setId(config.getString("instance.id"));
+        instanceInfo.setHost(config.getString("instance.host"));
+        instanceInfo.setPort(getServer().getPort());
+        instanceInfo.setGroup(config.getString("instance.group"));
+        instanceInfo.setMaxPlayers(getServer().getMaxPlayers());
     }
 
     private void scheduleInstanceHeartbeatTask() {
         heartbeatTask = getServer().getScheduler().scheduleRepeatingTask(this, () -> {
-            currentInstanceInfo.setPlayers(getServer().getOnlinePlayers().size());
-            core.publishInstanceInfo(currentInstanceInfo);
+            instanceInfo.setPlayers(getServer().getOnlinePlayers().size());
+
+            InstanceHeartbeatMessage message = new InstanceHeartbeatMessage();
+            message.setInstance(instanceInfo);
+
+            core.publish(message, instanceInfo.getId());
         }, 20);
     }
 
@@ -82,7 +88,8 @@ public class RedisBridgePlugin extends PluginBase {
             heartbeatTask.cancel();
         }
 
-        core.publishInstanceRemove(currentInstanceInfo);
+        InstanceShutdownMessage message = new InstanceShutdownMessage();
+        core.publish(message, instanceInfo.getId());
 
         if (core != null) {
             core.close();

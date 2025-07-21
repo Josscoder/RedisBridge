@@ -1,9 +1,8 @@
-package net.josscoder.redisbridge.core.manager;
+package net.josscoder.redisbridge.core.instance;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.Getter;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
