@@ -15,6 +15,10 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
+/**
+ * Part of this code is taken from:
+ * <a href="https://github.com/theminecoder/DynamicServers/blob/master/dynamicservers-common/src/main/java/me/theminecoder/dynamicservers/DynamicServersCore.java">DynamicServers</a>
+ */
 public class RedisBridgeCore {
 
     public static final String CHANNEL = "redis-bridge-channel";

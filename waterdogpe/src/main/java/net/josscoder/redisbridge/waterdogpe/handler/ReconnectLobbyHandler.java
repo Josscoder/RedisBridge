@@ -23,7 +23,7 @@ public class ReconnectLobbyHandler implements IReconnectHandler {
 
         InstanceInfo availableInstance = InstanceManager.getInstance().selectAvailableInstance(
                 "lobby",
-                InstanceManager.SelectionStrategy.MOST_PLAYERS_AVAILABLE
+                InstanceManager.SelectionStrategy.LOWEST_PLAYERS
         );
         if (availableInstance == null) {
             return null;

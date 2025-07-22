@@ -25,7 +25,7 @@ public class LobbyCommand extends Command {
 
         InstanceInfo availableInstance = InstanceManager.getInstance().selectAvailableInstance(
                 "lobby",
-                InstanceManager.SelectionStrategy.MOST_PLAYERS_AVAILABLE
+                InstanceManager.SelectionStrategy.LOWEST_PLAYERS
         );
         if (availableInstance == null) {
             player.sendMessage(TextFormat.RED + "There are no lobbies available!");
