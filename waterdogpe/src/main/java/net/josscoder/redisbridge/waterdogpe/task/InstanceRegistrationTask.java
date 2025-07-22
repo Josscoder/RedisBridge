@@ -2,8 +2,8 @@ package net.josscoder.redisbridge.waterdogpe.task;
 
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.scheduler.Task;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
 import net.josscoder.redisbridge.waterdogpe.RedisBridgePlugin;
 import net.josscoder.redisbridge.waterdogpe.utils.Utils;
 import org.apache.logging.log4j.Logger;

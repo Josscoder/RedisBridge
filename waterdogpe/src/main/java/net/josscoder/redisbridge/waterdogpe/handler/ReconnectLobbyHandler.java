@@ -5,8 +5,8 @@ import dev.waterdog.waterdogpe.network.connection.handler.IReconnectHandler;
 import dev.waterdog.waterdogpe.network.connection.handler.ReconnectReason;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
 import net.josscoder.redisbridge.waterdogpe.RedisBridgePlugin;
 import net.josscoder.redisbridge.waterdogpe.utils.Utils;
 
@@ -23,7 +23,7 @@ public class ReconnectLobbyHandler implements IReconnectHandler {
 
         InstanceInfo availableInstance = InstanceManager.getInstance().selectAvailableInstance(
                 "lobby",
-                InstanceManager.SelectionStrategy.MOST_PLAYERS_AVAILABLE
+                InstanceManager.SelectionStrategy.LOWEST_PLAYERS
         );
         if (availableInstance == null) {
             return null;

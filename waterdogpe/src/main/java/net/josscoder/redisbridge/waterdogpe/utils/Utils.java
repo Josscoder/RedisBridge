@@ -1,7 +1,7 @@
 package net.josscoder.redisbridge.waterdogpe.utils;
 
 import dev.waterdog.waterdogpe.network.serverinfo.BedrockServerInfo;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
 
 import java.net.InetSocketAddress;
 

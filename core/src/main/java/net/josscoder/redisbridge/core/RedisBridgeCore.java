@@ -1,20 +1,27 @@
 package net.josscoder.redisbridge.core;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
+import net.josscoder.redisbridge.core.message.MessageBase;
+import net.josscoder.redisbridge.core.message.MessageHandler;
+import net.josscoder.redisbridge.core.message.MessageHandlerRegistry;
+import net.josscoder.redisbridge.core.message.MessageRegistry;
 import net.josscoder.redisbridge.core.logger.ILogger;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.message.defaults.InstanceHeartbeatMessage;
+import net.josscoder.redisbridge.core.message.defaults.InstanceShutdownMessage;
+import net.josscoder.redisbridge.core.utils.JsonUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
+/**
+ * Part of this code is taken from:
+ * <a href="https://github.com/theminecoder/DynamicServers/blob/master/dynamicservers-common/src/main/java/me/theminecoder/dynamicservers/DynamicServersCore.java">DynamicServers</a>
+ */
 public class RedisBridgeCore {
 
-    private static final Gson GSON = new GsonBuilder().create();
-    public static final String INSTANCE_HEARTBEAT_CHANNEL = "instance_heartbeat_channel";
-    public static final String INSTANCE_REMOVE_CHANNEL = "instance_removed_channel";
+    public static final String CHANNEL = "redis-bridge-channel";
 
     private JedisPool jedisPool = null;
     private Thread listenerThread;
@@ -37,16 +44,30 @@ public class RedisBridgeCore {
                 try (Jedis jedis = jedisPool.getResource()) {
                     jedis.subscribe(new JedisPubSub() {
                         @Override
-                        public void onMessage(String channel, String message) {
-                            if (channel.equals(INSTANCE_HEARTBEAT_CHANNEL)) {
-                                InstanceInfo data = GSON.fromJson(message, InstanceInfo.class);
-                                InstanceManager.INSTANCE_CACHE.put(data.getId(), data);
-                            } else if (channel.equals(INSTANCE_REMOVE_CHANNEL)) {
-                                InstanceInfo data = GSON.fromJson(message, InstanceInfo.class);
-                                InstanceManager.INSTANCE_CACHE.invalidate(data.getId());
+                        public void onMessage(String channel, String messageJson) {
+                            try {
+                                String type = JsonUtils.extractType(messageJson);
+
+                                Class<? extends MessageBase> clazz = MessageRegistry.getClass(type);
+                                if (clazz == null) {
+                                    logger.debug("Unregistered message type: " + type);
+
+                                    return;
+                                }
+
+                                MessageBase message = JsonUtils.fromJson(messageJson, clazz);
+
+                                MessageHandler<MessageBase> handler = MessageHandlerRegistry.getHandler(type);
+                                if (handler != null) {
+                                    handler.handle(message);
+                                } else {
+                                    logger.debug("No handler found for message type: " + type);
+                                }
+                            } catch (Exception e) {
+                                logger.error("Error handling message", e);
                             }
                         }
-                    }, INSTANCE_REMOVE_CHANNEL, INSTANCE_HEARTBEAT_CHANNEL);
+                    }, CHANNEL);
                 } catch (Exception e) {
                     logger.error("RedisBridge encountered an error, will retry in 1 second", e);
                     try {
@@ -62,18 +83,33 @@ public class RedisBridgeCore {
         listenerThread.start();
     }
 
-    public void publish(String message, String channel) {
+    public void publish(MessageBase message, String sender) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.publish(channel, message);
+            message.setTimestamp(System.currentTimeMillis());
+            message.setSender(sender);
+
+            String json = JsonUtils.toJson(message);
+            jedis.publish(CHANNEL, json);
         }
     }
 
-    public void publishInstanceInfo(InstanceInfo info) {
-        publish(GSON.toJson(info), INSTANCE_HEARTBEAT_CHANNEL);
-    }
+    public void registerDefaultMessages() {
+        MessageRegistry.register(InstanceHeartbeatMessage.TYPE, InstanceHeartbeatMessage.class);
+        MessageHandlerRegistry.register(InstanceHeartbeatMessage.TYPE, new MessageHandler<InstanceHeartbeatMessage>() {
+            @Override
+            public void handle(InstanceHeartbeatMessage message) {
+                InstanceInfo instance = message.getInstance();
+                InstanceManager.INSTANCE_CACHE.put(instance.getId(), instance);
+            }
+        });
 
-    public void publishInstanceRemove(InstanceInfo info) {
-        publish(GSON.toJson(info), INSTANCE_REMOVE_CHANNEL);
+        MessageRegistry.register(InstanceShutdownMessage.TYPE, InstanceShutdownMessage.class);
+        MessageHandlerRegistry.register(InstanceShutdownMessage.TYPE, new MessageHandler<InstanceShutdownMessage>() {
+            @Override
+            public void handle(InstanceShutdownMessage message) {
+                InstanceManager.INSTANCE_CACHE.invalidate(message.getSender());
+            }
+        });
     }
 
     public void close() {

@@ -6,7 +6,7 @@ import dev.waterdog.waterdogpe.event.defaults.ServerTransferRequestEvent;
 import dev.waterdog.waterdogpe.logger.Color;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
 
 public class ProxyEvents {
 

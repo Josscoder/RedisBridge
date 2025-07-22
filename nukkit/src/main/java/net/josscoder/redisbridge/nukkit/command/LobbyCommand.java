@@ -4,8 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import net.josscoder.redisbridge.core.data.InstanceInfo;
-import net.josscoder.redisbridge.core.manager.InstanceManager;
+import net.josscoder.redisbridge.core.instance.InstanceInfo;
+import net.josscoder.redisbridge.core.instance.InstanceManager;
 
 public class LobbyCommand extends Command {
 
@@ -25,7 +25,7 @@ public class LobbyCommand extends Command {
 
         InstanceInfo availableInstance = InstanceManager.getInstance().selectAvailableInstance(
                 "lobby",
-                InstanceManager.SelectionStrategy.MOST_PLAYERS_AVAILABLE
+                InstanceManager.SelectionStrategy.LOWEST_PLAYERS
         );
         if (availableInstance == null) {
             player.sendMessage(TextFormat.RED + "There are no lobbies available!");
