@@ -5,7 +5,7 @@
 **RedisBridge** is a complete rewrite of my previous plugin [JBridge](https://github.com/JossArchived/JBridge), developed for Nukkit and WaterdogPE. It provides automatic server registration, player management, and seamless communication between backend servers and the proxy.
 
 # ⚙️ Available Commands
-RedisBridge includes ready-to-use commands for your proxy (WaterdogPE, Velocity, BungeeCord) or backend servers:
+RedisBridge includes ready-to-use commands for your WaterdogPE proxy or Nukkit backend servers:
 
 - `/lobby`
 Teleports the player to an available lobby instance using the `LOWEST_PLAYERS` strategy to avoid overloading a single lobby while keeping activity balanced.
@@ -53,7 +53,7 @@ Provides **automatic available instance selection** using different strategies:
 
 - `LOWEST_PLAYERS`: Selects the instance with the fewest players.
 
-- `MOST_PLAYERS_AVAILABLE`: Selects the instance with the most players.
+- `MOST_PLAYERS_AVAILABLE`: Selects the instance with the most players while still having available slots.
 
 Example:
 

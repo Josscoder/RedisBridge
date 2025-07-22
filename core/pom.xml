@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.josscoder.redisbridge</groupId>
         <artifactId>RedisBridge</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>net.josscoder.redisbridge.core</groupId>
