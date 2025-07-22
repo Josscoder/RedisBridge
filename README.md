@@ -14,7 +14,7 @@ Teleports the player to an available lobby instance using the `LOWEST_PLAYERS` s
 Transfers the player to a specific instance if available. Useful for networks with multiple game modes.
 
 - `/whereami`
-Displays information to the player showing which instance and group they are currently in, along with the number of players and instance capacity.
+Displays information to the player showing which instance and proxy they are currently in.
 
 # 📡 Instance Management Usage
 RedisBridge includes a **distributed instance discovery and selection system** for minigame servers, lobbies, or backend servers using Redis and a low-latency distributed cache.
